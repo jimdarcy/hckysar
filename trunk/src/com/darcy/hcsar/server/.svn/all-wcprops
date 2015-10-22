@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/hckysar/!svn/ver/2/trunk/src/com/darcy/hcsar/server
+END
+HCSAREmailHandlerServlet.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/hckysar/!svn/ver/2/trunk/src/com/darcy/hcsar/server/HCSAREmailHandlerServlet.java
+END
+MessageUtils.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/hckysar/!svn/ver/2/trunk/src/com/darcy/hcsar/server/MessageUtils.java
+END
+GreetingServiceImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/hckysar/!svn/ver/2/trunk/src/com/darcy/hcsar/server/GreetingServiceImpl.java
+END

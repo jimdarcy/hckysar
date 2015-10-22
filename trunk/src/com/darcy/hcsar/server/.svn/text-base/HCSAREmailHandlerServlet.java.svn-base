@@ -1,0 +1,67 @@
+package com.darcy.hcsar.server;
+
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.ArrayUtils;
+
+public class HCSAREmailHandlerServlet extends HttpServlet
+{
+  private static final long serialVersionUID = 1L;
+  private static final Logger log = Logger.getLogger(HCSAREmailHandlerServlet.class.getName());
+
+  public static final String[] AGENCIES = { "HCSAR", "RVFD", "RADCLIFFFIRE", "TRACER", "VGFD", "UFD", "EFD" };
+
+  public static final String[] ADDRESSES = { "4380-fmYmNNSvXu9si8fk@alert.active911.com", "2012-imarBahWRVvcdSrU@alert.active911.com", "ZP7760-kUNRpgGJJ8Rtk32C@alert.active911.com", "TP7760-kUNRpgGJJ8Rtk32C@alert.active911.com","9808-YMQqmYvYnvQvhYSf@alert.active911.com","11307-yfhWu8sQvHigiePg@alert.active911.com","10108-J9qYrkhspzm4F2zq@alert.active911.com" };
+
+  public static void main(String[] args)
+  {
+  }
+
+  public void doPost(HttpServletRequest req, HttpServletResponse resp)
+    throws IOException
+  {
+    log.severe("Beginning processing");
+    Properties props = new Properties();
+    Session session = Session.getDefaultInstance(props, null);
+    String incident = null;
+    try {
+      MimeMessage message = new MimeMessage(session, req.getInputStream());
+
+      String subject = message.getSubject();
+      log.severe("Message Subject: " + subject);
+      if (subject.startsWith("Clear Report")) {
+        log.severe("Found a clear report, so quit processing");
+        return;
+      }
+      String agency = req.getRequestURL().toString();
+      agency = agency.substring(agency.lastIndexOf('/') + 1, 
+        agency.indexOf('@'));
+      log.severe(agency);
+      agency = agency.toUpperCase();
+      if (ArrayUtils.contains(AGENCIES, agency)) {
+        log.severe("Found agency " + agency);
+        int beginIndex = subject.indexOf("#");
+        log.severe("Index: " + beginIndex);
+        if (beginIndex > -1) {
+          incident = subject.substring(beginIndex + 1);
+          MessageUtils.handleIncident(incident, agency, message);
+          log.severe(incident);
+        }
+      }
+      else {
+        log.severe("Didn't find agency " + agency);
+      }
+    }
+    catch (MessagingException e)
+    {
+      log.severe(e.getMessage());
+    }
+  }
+}
